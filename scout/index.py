@@ -1,3 +1,7 @@
+import json
+import sqlite3
+
+
 # TODO
 # 1. Load the file to sqlite3 database
 # 2. Query DB in chunks
@@ -20,3 +24,15 @@ def load_corpus(filepath: str, db: str):
     if not isinstance(db, str):
         raise TypeError(f"""Param 'db' must be of \
     type 'str', not {type(db).__name__}""")
+
+    corpus_db = sqlite3.connect(db)
+    corpus_db.execute("""CREATE TABLE books(
+        id INTEGER NOT NULL PRIMARY KEY,
+        title TEXT NOT NULL,
+        summary TEXT NOT NULL,
+        author TEXT NOT NULL
+    );
+    """)
+
+    corpus_db.commit()
+    corpus_db.close()

@@ -20,7 +20,7 @@ def tokenize(text: str) -> str:
 
     if not isinstance(text, str):
         raise TypeError(f"""Variable 'text' must be of \
-        type 'str', not {type(text).__name__}""")
+    type 'str', not {type(text).__name__}""")
 
     # TODO
     # 1. Lowercase all words
@@ -43,7 +43,7 @@ def ngram(text: str) -> List[str]:
 
     if not isinstance(text, str):
         raise TypeError(f"""Variable 'text' must be of \
-        type 'str', not {type(text).__name__}""")
+    type 'str', not {type(text).__name__}""")
 
     # TODO
     # 1. Text to list!

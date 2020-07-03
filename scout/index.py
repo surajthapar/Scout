@@ -8,46 +8,65 @@ import sqlite3
 # 3. Apply term functions on each document
 # 5. Create partitions (max 10k records per file?)
 
-def load_corpus(filepath: str, db: str):
-    """Load Corpus inserts data to SQLite3 database.
+class Index:
+    """Index cls"""
 
-    :param filepath: Corpus data file path.
-    :type filepath: str
-    :param db: SQLite3 database file path.
-    :type db: str
-    """
+    def __init__(self, corpus_filepath, database):
+        pass
 
-    if not isinstance(filepath, str):
-        raise TypeError(f"""Param 'filepath' must be of \
-    type 'str', not {type(filepath).__name__}""")
+    def connection(self, db):
+        return sqlite3.connect(db)
 
-    if not isinstance(db, str):
-        raise TypeError(f"""Param 'db' must be of \
-    type 'str', not {type(db).__name__}""")
+    def load_to_db(self, corpus):
+        """Load To DB inserts corpus data to SQLite3.
 
-    corpus_db = sqlite3.connect(db)
-    corpus_db.execute("""CREATE TABLE books(
-        id INTEGER NOT NULL PRIMARY KEY,
-        title TEXT NOT NULL,
-        summary TEXT NOT NULL,
-        author TEXT NOT NULL
-    );
-    """)
+        Corpus is a JSON file with book metadata. It follows
+        the below schema :
 
-    with open(filepath) as f:
-        books = json.load(f)
+        ```{
+            "titles": [
+                "Anything You Want",
+            ],
+            "summaries": [
+                {
+                "id": 0,
+                "summary": "Practicing meditation ... in your life"
+                },
+            ],
+            "authors": [
+                {
+                "book_id": 0,
+                "author": "Dan Harris"
+                },
+            ]
+        }```
 
-        for i, title in enumerate(books['titles']):
-            c = corpus_db.cursor()
-            c.execute(
-                "INSERT INTO books VALUES (?,?,?,?)",
-                (
-                    books['authors'][i]['book_id'],
-                    title,
-                    books['summaries'][i]['summary'],
-                    books['authors'][i]['author']
+        :param corpus: Corpus data filepath.
+        :type corpus: str
+        """
+        # TODO : Check if database already exists
+        #        ..if not empty, raise.
+        self.database.execute("""CREATE TABLE books(
+            id INTEGER NOT NULL PRIMARY KEY,
+            title TEXT NOT NULL,
+            summary TEXT NOT NULL,
+            author TEXT NOT NULL
+        );
+        """)
+
+        with open(corpus) as f:
+            books = json.load(f)
+
+            for i, title in enumerate(books['titles']):
+                c = self.database.cursor()
+                c.execute(
+                    "INSERT INTO books VALUES (?,?,?,?)",
+                    (
+                        books['authors'][i]['book_id'],
+                        title,
+                        books['summaries'][i]['summary'],
+                        books['authors'][i]['author']
+                    )
                 )
-            )
 
-    corpus_db.commit()
-    corpus_db.close()
+        self.database.commit()

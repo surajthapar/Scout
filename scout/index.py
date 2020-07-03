@@ -12,4 +12,11 @@ def load_corpus(filepath: str, db: str):
     :param db: SQLite3 database file path.
     :type db: str
     """
-    pass
+
+    if not isinstance(filepath, str):
+        raise TypeError(f"""Param 'filepath' must be of \
+    type 'str', not {type(filepath).__name__}""")
+
+    if not isinstance(db, str):
+        raise TypeError(f"""Param 'db' must be of \
+    type 'str', not {type(db).__name__}""")

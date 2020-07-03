@@ -34,5 +34,20 @@ def load_corpus(filepath: str, db: str):
     );
     """)
 
+    with open(filepath) as f:
+        books = json.load(f)
+
+        for i, title in enumerate(books['titles']):
+            c = corpus_db.cursor()
+            c.execute(
+                "INSERT INTO books VALUES (?,?,?,?)",
+                (
+                    books['authors'][i]['book_id'],
+                    title,
+                    books['summaries'][i]['summary'],
+                    books['authors'][i]['author']
+                )
+            )
+
     corpus_db.commit()
     corpus_db.close()

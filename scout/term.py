@@ -97,6 +97,8 @@ def ngram(text: List[str],
             x, y = [0], [mn]
         for ng in list(zip(x, y)):
             gram = blob[ng[0]:ng[1]]
-            ngrams[gram] = ngrams.get(gram, list()).append(pos)
-
+            if ngrams.get(gram):
+                ngrams[gram].append(pos)
+            else:
+                ngrams[gram] = [pos]
     return ngrams

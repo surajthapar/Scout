@@ -61,7 +61,7 @@ def tokenize(text: str) -> List[str]:
 
 
 def ngram(text: List[str],
-          min_len: int = 2,
+          min_len: int = 3,
           max_len: int = 8) -> Dict[str, List[int]]:
     """Ngram converts a text into a list of smaller text chunks.
 

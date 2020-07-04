@@ -18,6 +18,40 @@ class Index:
         self.database = database
         self.corpus = corpus_filepath
 
+    def define(self):
+        """Define setups the schema for required data tables.
+
+        :raises TableAlreadyExists: Failed to create table, as
+        it already exists in db.
+        """        
+        # Table : Corpus
+        conn = sqlite3.connect(self.database)
+        if self.table_exists("books"):
+            raise TableAlreadyExists(f"""Couldn't create table 'books'\
+        in the database '{self.database}'.""")
+        conn.execute("""CREATE TABLE books(
+            id INTEGER NOT NULL PRIMARY KEY,
+            title TEXT NOT NULL,
+            summary TEXT NOT NULL,
+            author TEXT NOT NULL
+        );
+        """)
+
+        # Table : Meta-Metadata
+        if self.table_exists("meta"):
+            raise TableAlreadyExists(f"""Couldn't create table 'meta'\
+        in the database '{self.database}'.""")
+        conn.execute("""CREATE TABLE meta(
+            id INTEGER NOT NULL PRIMARY KEY,
+            counter INTEGER NOT NULL
+        );
+        """)
+        c = conn.cursor()
+        # Set counter to ZERO.
+        c.execute("INSERT INTO meta VALUES (?,?)", (0, 0))
+        conn.commit()
+        conn.close()
+
     def table_exists(self, name="books") -> bool:
         """Table exists checks sqlite db for table's existence.
 
@@ -57,22 +91,8 @@ class Index:
                 },
             ]
         }```
-
-        :raises TableAlreadyExists: Raised when 'books' table already
-        exists in the database.
         """
         conn = sqlite3.connect(self.database)
-        if self.table_exists("books"):
-            raise TableAlreadyExists(f"""Couldn't create table 'books'\
-        in the database '{self.database}'.""")
-        conn.execute("""CREATE TABLE books(
-            id INTEGER NOT NULL PRIMARY KEY,
-            title TEXT NOT NULL,
-            summary TEXT NOT NULL,
-            author TEXT NOT NULL
-        );
-        """)
-
         with open(self.corpus) as f:
             books = json.load(f)
 
@@ -89,3 +109,10 @@ class Index:
                 )
 
         conn.commit()
+        conn.close()
+
+    def calibrate_count(self):
+        pass
+
+    def register(self, id):
+        pass

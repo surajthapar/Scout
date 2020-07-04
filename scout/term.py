@@ -105,27 +105,31 @@ def ngram(text: List[str],
     return ngrams
 
 
-def partition(word: str,
-              path_prefix: str,
-              indexed_at: List[int] = [1, 3, 5]) -> str:
-    """Returns a filepath for term's clustering.
+def partitions(ngrams: List[Dict[str, List[int]]],
+               path_prefix: str,
+               indexed_at: List[int]) -> str:
+    """Returns a List[filepath] for term's clustering.
 
-    :param word: A word or a term.
-    :type word: str
+    :param word: List of ngrams.
+    :type words: List[Dict[str, List[int]]]
     :param path_prefix: Folder containing the index.
     :type path_prefix: str
-    :param indexed_at: Trim positions for a word, defaults to [1, 3, 5].
-    :type indexed_at: List[int], optional
-    :return: Relative os path for the term file.
-    :rtype: str
+    :param indexed_at: Trim positions for a word.
+    :type indexed_at: List[int]
+    :return: List of relative os paths for the term file.
+    :rtype: List[str]
     """
-    ln = len(word)
-    index = [x for x in indexed_at if x < ln]
-    path = ''
-    for idx in index:
-        path = os.path.join(path, word[:idx])
-    path = os.path.join(
-        path_prefix,
-        path + ".part"
-    )
-    return path
+    for word, positions in ngrams.items():
+        ln = len(word)
+        index = [x for x in indexed_at if x < ln]
+        path = ''
+
+        # Slicing the word can help in faster file access times,
+        # in case of large dataset.
+        for idx in index:
+            path = os.path.join(path, word[:idx])
+        path = os.path.join(
+            path_prefix,
+            path + ".json"
+        )
+        yield (word, path)

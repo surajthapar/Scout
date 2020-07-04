@@ -14,10 +14,12 @@ class Index:
     """Index cls"""
 
     doc_counter = 0  # Total number of documents added to index.
+    index_path = None
 
-    def __init__(self, corpus_filepath, database):
+    def __init__(self, corpus_filepath, database, slices=[1, 2, 4]):
         self.database = database
         self.corpus = corpus_filepath
+        self.slices = slices
 
     def define(self):
         """Define setups the schema for required data tables.
@@ -44,12 +46,23 @@ class Index:
         in the database '{self.database}'.""")
         conn.execute("""CREATE TABLE meta(
             id INTEGER NOT NULL PRIMARY KEY,
-            total_documents INTEGER NOT NULL
+            total_documents INTEGER NOT NULL,
+            index_path TEXT NOT NULL,
+            slices TEXT NOT NULL
         );
         """)
         c = conn.cursor()
         # Set total_documents to ZERO.
-        c.execute("INSERT INTO meta VALUES (?,?);", (0, 0))
+        self.index_path = "idx_"+self.database.replace(".", "_")
+        c.execute(
+            "INSERT INTO meta VALUES (?,?,?,?);",
+            (
+                0,
+                0,
+                self.index_path,
+                json.dumps(self.slices)
+            )
+        )
         conn.commit()
         c.close()
         conn.close()
@@ -115,6 +128,31 @@ class Index:
         c.close()
         conn.close()
 
+    def read_meta(self):
+        conn = sqlite3.connect(self.database)
+        c = conn.cursor()
+        c.execute("SELECT index_path, slices FROM meta WHERE id=0;")
+        self.index_path = c.fetchone()[0]
+        self.slices = json.loads(c.fetchone()[1])
+        c.close()
+        conn.close()
+
+    def read_partition(self, path):
+        with open(path, 'r') as f:
+            return json.load(f)
+
+    def write_partition(self, path, data):
+        with open(path, 'w') as f:
+            json.dump(data, f)
+
+    def index_doc(self, ngrams):
+        nparts = term.partitions(ngrams,
+                                 path_prefix=self.index_path,
+                                 indexed_at=[1, 2])
+        for word, path in nparts:
+            pos = ngrams[word]
+            yield (word, path, pos)
+
     def register_corpus(self):
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
@@ -124,8 +162,19 @@ class Index:
             document = f"{row[1]} - {row[3]} {row[2]}"
             words = term.tokenize(document)
             ngrams = term.ngram(words)
-            print(f"ID : {row[0]}")
-            print(ngrams)
+            for word, path, pos in self.index_doc(ngrams):
+                # TODO : Load & Write json to the file.
+                # file - change idx/c/ch.json
+                # schema -
+                # {
+                #     "change" : [
+                #         {
+                #             "doc_id" : 0,
+                #             "positions" : [20, 45]
+                #         },
+                #     ]
+                # }
+                pass
 
             self.doc_counter += 1
         c.close()

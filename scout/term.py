@@ -28,7 +28,8 @@ STOP_WDS = {'a', 'about', 'above', 'after', 'again', 'against', 'all',
 def tokenize(text: str) -> List[str]:
     """Tokenization is a process of text simplification.
 
-    The input text is converted to all lowercase characters. Special
+    This function returns a list of important words in a text. The
+    input text is converted to all lowercase characters. Special
     characters and punctuations are removed from the text. Finally,
     stop words like 'a', 'the', 'for', 'from' etc. are removed.
 
@@ -47,7 +48,7 @@ def tokenize(text: str) -> List[str]:
     type 'str', not {type(text).__name__}""")
 
     # Joining hyphenated words
-    text = text.replace('-', '')  
+    text = text.replace('-', '')
 
     # Removing non-ascii char
     allowed_chars = ''.join(set(string.printable)-set(string.punctuation))

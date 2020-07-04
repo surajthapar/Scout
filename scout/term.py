@@ -62,15 +62,15 @@ def tokenize(text: str) -> List[str]:
 
 def ngram(text: List[str],
           min_len: int = 2,
-          max_len: int = 12) -> Dict[str, List[int]]:
+          max_len: int = 8) -> Dict[str, List[int]]:
     """Ngram converts a text into a list of smaller text chunks.
 
     :param text: List of tokenized text.
     :type text: List[str]
     :param min_len: Minimum length on an Ngram.
-    :type min_len: int
+    :type min_len: int, optional
     :param max_len: Maximum length on an Ngram.
-    :type max_len: int
+    :type max_len: int, optional
     :raises TypeError: Unsupported input text type.
     :raises IndexError: List, text is empty.
     :return: Dict of ngram and position.
@@ -85,8 +85,18 @@ def ngram(text: List[str],
         raise TypeError(f"""Elements of list 'text' must\
     be of type 'str', not {type(text).__name__}""")
 
-    # TODO
-    # 1. Text to list!
-    # 2. Ngram each word.
+    ngrams = dict()
 
-    return list(text)
+    mn, mx = min_len, max_len
+
+    for pos, blob in enumerate(text):
+        ln = len(blob)
+        x = [*([0] * (min(mx, ln) - mn + 1)), *list(range(1, ln + 1 - mx))]
+        y = list(range(mn, ln + 1))
+        if not x or not y:
+            x, y = [0], [mn]
+        for ng in list(zip(x, y)):
+            gram = blob[ng[0]:ng[1]]
+            ngrams[gram] = ngrams.get(gram, list()).append(pos)
+
+    return ngrams

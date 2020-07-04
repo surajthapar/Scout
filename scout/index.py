@@ -18,16 +18,6 @@ class Index:
         self.database = database
         self.corpus = corpus_filepath
 
-    def connection(self, db):
-        """Connection returns SQLite db connection.
-
-        :param db: Database file to connect to.
-        :type db: str
-        :return: A SQLite database connection.
-        :rtype: sqlite3.Connection
-        """
-        return sqlite3.connect(db)
-
     def table_exists(self, name="books") -> bool:
         """Table exists checks sqlite db for table's existence.
 
@@ -36,7 +26,7 @@ class Index:
         :return: Existence of the table in self.database
         :rtype: bool
         """
-        conn = self.connection(self.database)
+        conn = sqlite3.connect(self.database)
         c = conn.cursor()
         c.execute(f"""SELECT count(name) FROM sqlite_master \
         WHERE type='table' AND name='{name}'""")
@@ -71,7 +61,7 @@ class Index:
         :raises TableAlreadyExists: Raised when 'books' table already
         exists in the database.
         """
-        conn = self.connection(self.database)
+        conn = sqlite3.connect(self.database)
         if self.table_exists("books"):
             raise TableAlreadyExists(f"""Couldn't create table 'books'\
         in the database '{self.database}'.""")

@@ -73,8 +73,8 @@ class Index:
         """
         conn = self.connection(self.database)
         if self.table_exists("books"):
-            raise TableAlreadyExists(f"""Couldn't create \
-table 'books' in the database '{self.database}'.""")
+            raise TableAlreadyExists(f"""Couldn't create table 'books'\
+        in the database '{self.database}'.""")
         conn.execute("""CREATE TABLE books(
             id INTEGER NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,

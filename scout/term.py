@@ -1,4 +1,5 @@
 import string
+import os
 from typing import List, Dict
 
 
@@ -102,3 +103,29 @@ def ngram(text: List[str],
             else:
                 ngrams[gram] = [pos]
     return ngrams
+
+
+def partition(word: str,
+              path_prefix: str,
+              indexed_at: List[int] = [1, 3, 5]) -> str:
+    """Returns a filepath for term's clustering.
+
+    :param word: A word or a term.
+    :type word: str
+    :param path_prefix: Folder containing the index.
+    :type path_prefix: str
+    :param indexed_at: Trim positions for a word, defaults to [1, 3, 5].
+    :type indexed_at: List[int], optional
+    :return: Relative os path for the term file.
+    :rtype: str
+    """
+    ln = len(word)
+    index = [x for x in indexed_at if x < ln]
+    path = ''
+    for idx in index:
+        path = os.path.join(path, word[:idx])
+    path = os.path.join(
+        path_prefix,
+        path + ".part"
+    )
+    return path

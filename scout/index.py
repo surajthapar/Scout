@@ -2,6 +2,10 @@ import json
 import sqlite3
 
 
+class TableAlreadyExists(Exception):
+    """Raised when table being created already exists."""
+    pass
+
 # TODO
 # 1. Load the file to sqlite3 database
 # 2. Query DB in chunks
@@ -12,12 +16,22 @@ class Index:
     """Index cls"""
 
     def __init__(self, corpus_filepath, database):
-        pass
+        self.database = database
+        self.corpus = corpus_filepath
 
     def connection(self, db):
         return sqlite3.connect(db)
 
-    def load_to_db(self, corpus):
+    def table_exists(self, name="books"):
+        conn = self.connection(self.database)
+        c = conn.cursor()
+        c.execute(f"""SELECT count(name) FROM sqlite_master \
+        WHERE type='table' AND name='{name}'""")
+        existence = c.fetchone()[0] == 1
+        conn.close()
+        return existence
+
+    def load_to_db(self):
         """Load To DB inserts corpus data to SQLite3.
 
         Corpus is a JSON file with book metadata. It follows
@@ -44,9 +58,11 @@ class Index:
         :param corpus: Corpus data filepath.
         :type corpus: str
         """
-        # TODO : Check if database already exists
-        #        ..if not empty, raise.
-        self.database.execute("""CREATE TABLE books(
+        conn = self.connection(self.database)
+        if self.table_exists("books"):
+            raise TableAlreadyExists(f"""Couldn't create
+        table 'books' in the database '{self.database}'.""")
+        conn.execute("""CREATE TABLE books(
             id INTEGER NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
             summary TEXT NOT NULL,
@@ -54,11 +70,11 @@ class Index:
         );
         """)
 
-        with open(corpus) as f:
+        with open(self.corpus) as f:
             books = json.load(f)
 
             for i, title in enumerate(books['titles']):
-                c = self.database.cursor()
+                c = conn.cursor()
                 c.execute(
                     "INSERT INTO books VALUES (?,?,?,?)",
                     (
@@ -69,4 +85,4 @@ class Index:
                     )
                 )
 
-        self.database.commit()
+        conn.commit()

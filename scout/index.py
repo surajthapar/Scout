@@ -1,18 +1,19 @@
 import json
 import sqlite3
+from scout import term
 
 
 class TableAlreadyExists(Exception):
     """Raised when table being created already exists."""
 
 # TODO
-# 1. Query DB in chunks
-# 2. Apply term functions on each document
-# 3. Create partitions (max 10k records per file?)
+# 1. Create partitions (max 10k records per file?)
 
 
 class Index:
     """Index cls"""
+
+    doc_counter = 0  # Total number of documents added to index.
 
     def __init__(self, corpus_filepath, database):
         self.database = database
@@ -48,8 +49,9 @@ class Index:
         """)
         c = conn.cursor()
         # Set total_documents to ZERO.
-        c.execute("INSERT INTO meta VALUES (?,?)", (0, 0))
+        c.execute("INSERT INTO meta VALUES (?,?);", (0, 0))
         conn.commit()
+        c.close()
         conn.close()
 
     def table_exists(self, name="books") -> bool:
@@ -63,8 +65,9 @@ class Index:
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
         c.execute(f"""SELECT count(name) FROM sqlite_master \
-        WHERE type='table' AND name='{name}'""")
+        WHERE type='table' AND name='{name}';""")
         existence = c.fetchone()[0] == 1
+        c.close()
         conn.close()
         return existence
 
@@ -99,7 +102,7 @@ class Index:
             for i, title in enumerate(books['titles']):
                 c = conn.cursor()
                 c.execute(
-                    "INSERT INTO books VALUES (?,?,?,?)",
+                    "INSERT INTO books VALUES (?,?,?,?);",
                     (
                         books['authors'][i]['book_id'],
                         title,
@@ -109,16 +112,28 @@ class Index:
                 )
 
         conn.commit()
+        c.close()
         conn.close()
 
-    def calibrate_count(self):
+    def register_corpus(self):
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
-        c.execute(
-            "UPDATE meta SET total_documents =total_documents + 1 WHERE id =0"
-        )
-        c.commit()
-        conn.close()
+        c.execute('SELECT id, title, summary, author FROM books;')
+        for row in c:
+            # Combining title, author & summary for wider search.
+            document = f"{row[1]} - {row[3]} {row[2]}"
+            words = term.tokenize(document)
+            ngrams = term.ngram(words)
+            print(f"ID : {row[0]}")
+            print(ngrams)
 
-    def register(self, id):
-        pass
+            self.doc_counter += 1
+        c.close()
+        c = conn.cursor()
+        c.execute(
+            "UPDATE meta SET total_documents=total_documents + ? WHERE id =0;",
+            (self.doc_counter,)
+        )
+        conn.commit()
+        c.close()
+        conn.close()

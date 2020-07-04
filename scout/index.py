@@ -23,7 +23,7 @@ class Index:
 
         :raises TableAlreadyExists: Failed to create table, as
         it already exists in db.
-        """        
+        """
         # Table : Corpus
         conn = sqlite3.connect(self.database)
         if self.table_exists("books"):
@@ -43,11 +43,11 @@ class Index:
         in the database '{self.database}'.""")
         conn.execute("""CREATE TABLE meta(
             id INTEGER NOT NULL PRIMARY KEY,
-            counter INTEGER NOT NULL
+            total_documents INTEGER NOT NULL
         );
         """)
         c = conn.cursor()
-        # Set counter to ZERO.
+        # Set total_documents to ZERO.
         c.execute("INSERT INTO meta VALUES (?,?)", (0, 0))
         conn.commit()
         conn.close()
@@ -112,7 +112,13 @@ class Index:
         conn.close()
 
     def calibrate_count(self):
-        pass
+        conn = sqlite3.connect(self.database)
+        c = conn.cursor()
+        c.execute(
+            "UPDATE meta SET total_documents =total_documents + 1 WHERE id =0"
+        )
+        c.commit()
+        conn.close()
 
     def register(self, id):
         pass

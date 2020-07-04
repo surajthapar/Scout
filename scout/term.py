@@ -1,5 +1,5 @@
 import string
-from typing import List
+from typing import List, Dict
 
 
 STOP_WDS = {'a', 'about', 'above', 'after', 'again', 'against', 'all',
@@ -44,7 +44,7 @@ def tokenize(text: str) -> List[str]:
     """
 
     if not isinstance(text, str):
-        raise TypeError(f"""Variable 'text' must be of \
+        raise TypeError(f"""Param 'text' must be of \
     type 'str', not {type(text).__name__}""")
 
     # Joining hyphenated words
@@ -60,19 +60,30 @@ def tokenize(text: str) -> List[str]:
     return text
 
 
-def ngram(text: str) -> List[str]:
+def ngram(text: List[str],
+          min_len: int = 2,
+          max_len: int = 12) -> Dict[str, List[int]]:
     """Ngram converts a text into a list of smaller text chunks.
 
-    :param text: Tokenized text.
-    :type text: str
-    :raises TypeError: Input text variable must be of type 'str'.
-    :return: List of tokenized text.
-    :rtype: List[str]
+    :param text: List of tokenized text.
+    :type text: List[str]
+    :param min_len: Minimum length on an Ngram.
+    :type min_len: int
+    :param max_len: Maximum length on an Ngram.
+    :type max_len: int
+    :raises TypeError: Unsupported input text type.
+    :raises IndexError: List, text is empty.
+    :return: Dict of ngram and position.
+    :rtype: Dict[str, List[int]]
     """
 
-    if not isinstance(text, str):
-        raise TypeError(f"""Variable 'text' must be of \
-    type 'str', not {type(text).__name__}""")
+    if isinstance(text, list):
+        if not isinstance(text[0], str):
+            raise TypeError(f"""Param 'text' must be of \
+    type 'list', not {type(text[0]).__name__}""")
+    else:
+        raise TypeError(f"""Elements of list 'text' must\
+    be of type 'str', not {type(text).__name__}""")
 
     # TODO
     # 1. Text to list!

@@ -4,7 +4,6 @@ import sqlite3
 
 class TableAlreadyExists(Exception):
     """Raised when table being created already exists."""
-    pass
 
 # TODO
 # 1. Query DB in chunks
@@ -20,9 +19,23 @@ class Index:
         self.corpus = corpus_filepath
 
     def connection(self, db):
+        """Connection returns SQLite db connection.
+
+        :param db: Database file to connect to.
+        :type db: str
+        :return: A SQLite database connection.
+        :rtype: sqlite3.Connection
+        """
         return sqlite3.connect(db)
 
-    def table_exists(self, name="books"):
+    def table_exists(self, name="books") -> bool:
+        """Table exists checks sqlite db for table's existence.
+
+        :param name: Name of the table, defaults to "books"
+        :type name: str, optional
+        :return: Existence of the table in self.database
+        :rtype: bool
+        """
         conn = self.connection(self.database)
         c = conn.cursor()
         c.execute(f"""SELECT count(name) FROM sqlite_master \
@@ -55,8 +68,8 @@ class Index:
             ]
         }```
 
-        :param corpus: Corpus data filepath.
-        :type corpus: str
+        :raises TableAlreadyExists: Raised when 'books' table already
+        exists in the database.
         """
         conn = self.connection(self.database)
         if self.table_exists("books"):

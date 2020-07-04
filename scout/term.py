@@ -66,6 +66,22 @@ def ngram(text: List[str],
           max_len: int = 8) -> Dict[str, List[int]]:
     """Ngram converts a text into a list of smaller text chunks.
 
+    The Ngram dictionary contains positions of a word in
+    the paragraph. Below is an example of three words as
+    inferred in the Ngram dict.
+    min_len, max_len = 3, 8
+    words = [.., "change",.., "changes",.., "changing",..]
+    ngram = {
+        "cha" : [7, 20, 34],
+        "chan" : [7, 20, 34],
+        "chang" : [7, 20, 34],
+        "change" : [7, 20],
+        "changes" : [20],
+        "changi" : [34],
+        "changin" : [34],
+        "changing" : [34]
+    }
+
     :param text: List of tokenized text.
     :type text: List[str]
     :param min_len: Minimum length on an Ngram.

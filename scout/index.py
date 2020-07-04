@@ -44,8 +44,8 @@ class Index:
         conn.close()
         return existence
 
-    def load_to_db(self):
-        """Load To DB inserts corpus data to SQLite3.
+    def save_corpus(self):
+        """Save Corpus loads book meta data to SQLite3.
 
         Corpus is a JSON file with book metadata. It follows
         the below schema :

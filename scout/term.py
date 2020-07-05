@@ -146,6 +146,6 @@ def partitions(ngrams: List[Dict[str, List[int]]],
             path = os.path.join(path, word[:idx])
         path = os.path.join(
             path_prefix,
-            path + ".json"
+            path + "_index.json"
         )
         yield (word, path)

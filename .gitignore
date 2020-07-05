@@ -149,3 +149,7 @@ cython_debug/
 
 # Sqlite3 DB
 *.db
+
+# Index Folders & Files
+idx_*/
+/*_index.json

@@ -17,14 +17,24 @@ class Scout:
 
     def __init__(self, database):
         self.database = database
-        self.read_meta()
+        self._meta()
 
-    def read_meta(self):
+    def _meta(self):
+        """Meta function fetches metadata from index db.
+
+        Following fields are pulled from the db :
+        1. total_documents
+        2. index_path
+        3. slices
+
+        :raises IndexMissingInDatabase: Raised when meta table doesn't exist.
+        """
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
         try:
             c.execute(
-                "SELECT total_documents, index_path, slices FROM meta WHERE id=0;"
+                """SELECT total_documents, index_path, slices\
+                   FROM meta WHERE id=0;"""
             )
         except sqlite3.OperationalError as e:
             raise IndexMissingInDatabase(e)

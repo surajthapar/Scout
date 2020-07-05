@@ -23,7 +23,7 @@ class Scout:
         result = c.fetchall()
         self.total_documents = result[0][0]
         self.index_path = result[0][1]
-        self.slices = result[0][2]
+        self.slices = json.loads(result[0][2])
         c.close()
         conn.close()
 

@@ -141,7 +141,7 @@ class Index:
         c.execute("SELECT index_path, slices FROM meta WHERE id=0;")
         result = c.fetchall()
         self.index_path = result[0][0]
-        self.slices = result[0][1]
+        self.slices = json.loads(result[0][1])
         c.close()
         conn.close()
 

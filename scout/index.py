@@ -205,14 +205,15 @@ class Index:
                 # Append doc_id, pos to word's list if word
                 # already exists, else add the word to the
                 # json file.
-                doc = row[0]  # Document ID
+                doc = str(row[0])  # Make sure doc_id is str (avoid dupes)
                 for word, pos in ngs:
+                    pos = list(set(pos))
                     if json_index.get(word):
                         if json_index[word].get(doc):
-                            json_index[word][doc] = [
+                            json_index[word][doc] = list(set([
                                 *json_index[word][doc],
                                 *pos
-                            ]
+                            ]))
                         else:
                             json_index[word][doc] = pos
                     else:

@@ -95,9 +95,12 @@ def ngram(text: List[str],
     """
 
     if isinstance(text, list):
-        if not isinstance(text[0], str):
-            raise TypeError(f"""Param 'text' must be of \
-    type 'list', not {type(text[0]).__name__}""")
+        try:
+            if not isinstance(text[0], str):
+                raise TypeError(f"""Param 'text' must be of \
+        type 'list', not {type(text[0]).__name__}""")
+        except IndexError:
+            return {}
     else:
         raise TypeError(f"""Elements of list 'text' must\
     be of type 'str', not {type(text).__name__}""")

@@ -164,16 +164,10 @@ class Index:
         Schema of a json file `idx/c/ch.json` :
         ```
             {
-                "change" : [
-                    {
-                        "doc_id" : 10,
-                        "positions" : [20, 45]
-                    },
-                    {
-                        "doc_id" : 20,
-                        "positions" : [5, 17, 33]
-                    },
-                ]
+                "change" : {
+                    10 : [20, 45],
+                    20 : [5, 17, 33]
+                }
             }
         ```
         """
@@ -204,16 +198,18 @@ class Index:
                 # Append doc_id, pos to word's list if word
                 # already exists, else add the word to the
                 # json file.
+                doc = row[0]  # Document ID
                 for word, pos in ngs:
                     if json_index.get(word):
-                        json_index[word].append(
-                            dict(
-                                doc_id=row[0],
-                                pos=pos
-                            )
-                        )
+                        if json_index[word].get(doc):
+                            json_index[word][doc] = [
+                                *json_index[word][doc],
+                                *pos
+                            ]
+                        else:
+                            json_index[word][doc] = pos
                     else:
-                        json_index[word] = [{"doc_id": row[0], "pos": pos}]
+                        json_index[word] = {doc: pos}
                 self.write_partition(partition_file, json_index)
 
             self.doc_counter += 1

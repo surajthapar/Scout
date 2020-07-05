@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+from typing import List, Dict, Iterator, Tuple
 from scout import term
 from scout.exceptions import (
     TableAlreadyExists,
@@ -8,21 +9,95 @@ from scout.exceptions import (
 
 
 class Index:
-    """Index cls"""
+    """Index generator for Scout searches.
+
+    Index class is used to generate file indices to
+    make realtime search faster. Pre-processing of
+    the index can be easily achieved.
+
+    > Input data format for book metadata is as follows :
+    ```
+    {
+        "titles": [
+            "Anything You Want",
+        ],
+        "summaries": [
+            {
+            "id": 0,
+            "summary": "Practicing meditation ... in your life"
+            },
+        ],
+        "authors": [
+            {
+            "book_id": 0,
+            "author": "Dan Harris"
+            },
+        ]
+    }
+    ```
+
+    Usage :
+    ```
+    from scout import Index
+    idx = Index(corpus_filepath="data.json", database="sample.db")
+    idx.register()
+    ```
+
+    Voila! It's that simple. You may control file partition
+    slicing by using `slicing` variable. It accepts a list of
+    int.
+
+    For example, a slicing param of [1, 2, 5] will save the
+    term "changlings" to 'idx_sample_db/c/ch/chang_index.json'.
+    A slicing param of [1, 2] will save the term "changling" to
+    'idx_sample_db/c/ch_index.json' and so on.
+
+    ```
+    idx = Index("data.json", "sample.db", slicing=[1, 2])
+    idx.register()
+    ```
+
+    Workflow :
+    The raw data.json is saved to SQLite3 database inside
+    'books' table. Each row is computed where text from
+    (title, summary, author) is combined together. Text
+    processing involves tokenization and generation of
+    n-grams. These n-grams are accounted for each document
+    and the position of occurrance. These n-grams are then
+    carefully saved in a calculated path, also known as a
+    partition. Files from this partition are readily
+    accessible during realtime search queries.
+
+    :raises TableAlreadyExists: Raised when table being created already exists.
+    """
 
     index_path = None
 
-    def __init__(self, corpus_filepath, database, slices=[1, 2, 4]):
+    def __init__(self,
+                 corpus_filepath: str,
+                 database: str,
+                 slices: List[int] = [1, 2, 4]
+                 ):
+        """Index.__init__
+
+        :param corpus_filepath: Location of raw json data.
+        :type corpus_filepath: str
+        :param database: Location of the SQLite3 database file.
+        :type database: str
+        :param slices: Term slicing window for file partition,
+        defaults to [1, 2, 4]
+        :type slices: List[int], optional
+        """
         self.database = database
         self.corpus = corpus_filepath
         self.slices = slices
 
         if self.table_exists("books") and self.table_exists("meta"):
-            self.read_meta()
+            self._meta()
         else:
             self.define()
-            self.save_corpus()
-            self.read_meta()
+            self.save()
+            self._meta()
 
     def define(self):
         """Define setups the schema for required data tables.
@@ -59,18 +134,13 @@ class Index:
         self.index_path = "idx_"+self.database.replace(".", "_")
         c.execute(
             "INSERT INTO meta VALUES (?,?,?,?);",
-            (
-                0,
-                0,
-                self.index_path,
-                json.dumps(self.slices)
-            )
+            (0, 0, self.index_path, json.dumps(self.slices))
         )
         conn.commit()
         c.close()
         conn.close()
 
-    def table_exists(self, name="books") -> bool:
+    def table_exists(self, name: str = "books") -> bool:
         """Table exists checks sqlite db for table's existence.
 
         :param name: Name of the table, defaults to "books"
@@ -80,15 +150,19 @@ class Index:
         """
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
+
         c.execute(f"""SELECT count(name) FROM sqlite_master \
         WHERE type='table' AND name='{name}';""")
+
         existence = c.fetchone()[0] == 1
+
         c.close()
         conn.close()
+
         return existence
 
-    def save_corpus(self):
-        """Save Corpus loads book meta data to SQLite3.
+    def save(self):
+        """Save corpus copies book metadata to SQLite3.
 
         Corpus is a JSON file with book metadata. It follows
         the below schema :
@@ -131,7 +205,15 @@ class Index:
         c.close()
         conn.close()
 
-    def read_meta(self):
+    def _meta(self):
+        """Meta function fetches metadata from index db.
+
+        Following fields are pulled from the db :
+        1. index_path
+        2. slices
+
+        :raises IndexMissingInDatabase: Raised when meta table doesn't exist.
+        """
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
         c.execute("SELECT index_path, slices FROM meta WHERE id=0;")
@@ -141,11 +223,32 @@ class Index:
         c.close()
         conn.close()
 
-    def read_partition(self, path):
+    def read_partition(self,
+                       path: str
+                       ) -> Dict[str, Dict[int, List[str]]]:
+        """Helper read function for index files.
+
+        :param path: Location of the index files.
+        :type path: str
+        :return: Index data.
+        :rtype: Dict[str, Dict[int, List[str]]]
+        """
         with open(path, 'r') as f:
             return json.load(f)
 
-    def write_partition(self, path, data):
+    def write_partition(self,
+                        path: str,
+                        data: Dict[str, Dict[int, List[str]]]
+                        ):
+        """Helper write function for index files.
+
+        Missing directories are recursively created.
+
+        :param path: Location of the index file.
+        :type path: str
+        :param data: Index data.
+        :type data: Dict[str, Dict[int, List[str]]]
+        """
         # Create directory if it doesn't exist.
         dir = os.path.dirname(path)
         os.makedirs(dir, exist_ok=True)
@@ -185,23 +288,28 @@ class Index:
 
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
+
+        # Get all docs, iterate using cursor.
         c.execute('SELECT id, title, summary, author FROM books;')
         for row in c:
+
             # Combining title, author & summary for wider search.
             document = f"{row[1]} - {row[3]} {row[2]}"
             words = term.tokenize(document)
             ngrams = term.ngram(words)
 
             # returns [(word, path, pos),]
-            ng_zip = list(self.index_doc(ngrams))
+            ng_zip = list(index_doc(self, ngrams))
             files_to_write = set(n[1] for n in ng_zip)
 
             # Writing to each file just once for
             # a single document (book).
             for partition_file in files_to_write:
                 try:
+                    # If json file already exists, read to memory.
                     json_index = self.read_partition(partition_file)
                 except FileNotFoundError:
+                    # Else create a new dictionary.
                     json_index = dict()
 
                 # Collect all words to be written in this file.
@@ -212,9 +320,14 @@ class Index:
                 # json file.
                 doc = str(row[0])  # Make sure doc_id is str (avoid dupes)
                 for word, pos in ngs:
+
+                    # Sets to avoid duplicate positions
                     pos = list(set(pos))
+
                     if json_index.get(word):
                         if json_index[word].get(doc):
+
+                            # Append positions to word's doc
                             json_index[word][doc] = list(set([
                                 *json_index[word][doc],
                                 *pos
@@ -225,6 +338,7 @@ class Index:
                         json_index[word] = {doc: pos}
                 self.write_partition(partition_file, json_index)
 
+        # While registering, always update total docs in corpus.
         c.close()
         c = conn.cursor()
         c.execute(

@@ -1,3 +1,4 @@
+import json
 import sqlite3
 from scout import term
 
@@ -27,11 +28,46 @@ class Scout:
         c.close()
         conn.close()
 
-    def search(self, query, k=None):
-        # Convert 'query' into ngrams (term functions)
+    def index_of_terms(self, path, terms):
+        data = dict()
+        try:
+            with open(path, 'r') as f:
+                js = json.load(f)
+                for t in terms:
+                    data[t] = js.get(t, {})
+        except FileNotFoundError:
+            pass
+        return data
+
+    def find_matches(self, ngrams):
         # Get json file paths from ngrams
+        nparts = list(term.partitions(ngrams,
+                                      path_prefix=self.index_path,
+                                      indexed_at=self.slices))
+        npaths = set(path for word, path in nparts)
+
         # Read partitions and gather results
+        for pth in npaths:
+            wds = list(word for word, path in nparts if path == pth)
+            json_index = self.index_of_terms(pth, wds)
+            for w, d in json_index.items():
+                yield (w, d)
+
+    def search(self, query, k=None):
+        # results = list()
+
+        if not isinstance(query, str):
+            raise TypeError("query must be of type str.")
+        elif not query:
+            raise ValueError("query cannot be empty.")
+
+        # Remove repetitive words in the query
+        words = list(set(term.tokenize(query)))
+        ngrams = term.ngram(words)
+
+        index = dict(self.find_matches(ngrams))
+
         # Apply BM25 (F) model to each document
         # Rank and sort the results by relevance score
         # Return a list of book(id, summary) w/ highest relevance
-        pass
+        return index

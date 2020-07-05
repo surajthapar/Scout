@@ -1,7 +1,8 @@
 import json
 import sqlite3
 import math
-import functools, operator
+import functools
+import operator
 from scout import term
 
 
@@ -54,7 +55,8 @@ class Scout:
                 # Note : Score will be negative if term occurs
                 # in all documents.
 
-                idf = math.log((td - df_t + 0.5) / (df_t + 0.5)) / math.log(0.5 + td)
+                idf = math.log((td - df_t + 0.5) / (df_t + 0.5))
+                idf = idf / math.log(0.5 + td)
                 score_doc_term = tf * (idf / (tf + k))
                 score_doc_query += score_doc_term
             score = (score_doc_query + 0.001) / len(terms)
@@ -100,7 +102,7 @@ class Scout:
 
         query_index = dict(self.find_matches(ngrams))
         doc_by_rlv = self.relevance(query_index)
-        doc_by_rlv = sorted(doc_relevance, key=lambda idx: idx[1])
+        doc_by_rlv = sorted(doc_by_rlv, key=lambda idx: idx[1])
 
         # Apply BM25 (F) model to each document
         # Rank and sort the results by relevance score

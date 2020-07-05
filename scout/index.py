@@ -154,6 +154,24 @@ class Index:
             yield (word, path, pos)
 
     def register_corpus(self):
+        """Register corpus calculates and writes index to json files.
+
+        Schema of a json file `idx/c/ch.json` :
+        ```
+            {
+                "change" : [
+                    {
+                        "doc_id" : 10,
+                        "positions" : [20, 45]
+                    },
+                    {
+                        "doc_id" : 20,
+                        "positions" : [5, 17, 33]
+                    },
+                ]
+            }
+        ```
+        """
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
         c.execute('SELECT id, title, summary, author FROM books;')
@@ -163,19 +181,7 @@ class Index:
             words = term.tokenize(document)
             ngrams = term.ngram(words)
             for word, path, pos in self.index_doc(ngrams):
-                # TODO : Load & Write json to the file.
-                # file - change idx/c/ch.json
-                # schema -
-                # {
-                #     "change" : [
-                #         {
-                #             "doc_id" : 0,
-                #             "positions" : [20, 45]
-                #         },
-                #     ]
-                # }
                 pass
-
             self.doc_counter += 1
         c.close()
         c = conn.cursor()

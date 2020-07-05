@@ -4,6 +4,7 @@ import math
 import functools
 import operator
 from scout import term
+from scout.exceptions import IndexMissingInDatabase
 
 
 class Scout:
@@ -21,9 +22,12 @@ class Scout:
     def read_meta(self):
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
-        c.execute(
-            "SELECT total_documents, index_path, slices FROM meta WHERE id=0;"
-        )
+        try:
+            c.execute(
+                "SELECT total_documents, index_path, slices FROM meta WHERE id=0;"
+            )
+        except sqlite3.OperationalError as e:
+            raise IndexMissingInDatabase(e)
         result = c.fetchall()
         self.total_documents = result[0][0]
         self.index_path = result[0][1]

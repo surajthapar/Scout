@@ -28,18 +28,19 @@ class Scout:
         c.close()
         conn.close()
 
-    def index_of_terms(self, path, terms):
-        data = dict()
-        try:
-            with open(path, 'r') as f:
-                js = json.load(f)
-                for t in terms:
-                    data[t] = js.get(t, {})
-        except FileNotFoundError:
-            pass
-        return data
-
     def find_matches(self, ngrams):
+
+        def index_of_terms(self, path, terms):
+            data = dict()
+            try:
+                with open(path, 'r') as f:
+                    js = json.load(f)
+                    for t in terms:
+                        data[t] = js.get(t, {})
+            except FileNotFoundError:
+                pass
+            return data
+
         # Get json file paths from ngrams
         nparts = list(term.partitions(ngrams,
                                       path_prefix=self.index_path,
@@ -49,7 +50,7 @@ class Scout:
         # Read partitions and gather results
         for pth in npaths:
             wds = list(word for word, path in nparts if path == pth)
-            json_index = self.index_of_terms(pth, wds)
+            json_index = index_of_terms(pth, wds)
             for w, d in json_index.items():
                 yield (w, d)
 

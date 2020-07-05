@@ -64,7 +64,7 @@ class Scout:
 
     def find_matches(self, ngrams):
 
-        def index_of_terms(self, path, terms):
+        def index_of_terms(path, terms):
             data = dict()
             try:
                 with open(path, 'r') as f:

@@ -14,7 +14,6 @@ class TableAlreadyExists(Exception):
 class Index:
     """Index cls"""
 
-    doc_counter = 0  # Total number of documents added to index.
     index_path = None
 
     def __init__(self, corpus_filepath, database, slices=[1, 2, 4]):
@@ -220,12 +219,11 @@ class Index:
                         json_index[word] = {doc: pos}
                 self.write_partition(partition_file, json_index)
 
-            self.doc_counter += 1
         c.close()
         c = conn.cursor()
         c.execute(
-            "UPDATE meta SET total_documents=total_documents + ? WHERE id =0;",
-            (self.doc_counter,)
+            """UPDATE meta SET total_documents=
+            (SELECT COUNT(1) FROM books) WHERE id =0;"""
         )
         conn.commit()
         c.close()

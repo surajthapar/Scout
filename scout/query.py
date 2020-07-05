@@ -1,5 +1,7 @@
 import json
 import sqlite3
+import math
+import functools, operator
 from scout import term
 
 
@@ -27,6 +29,36 @@ class Scout:
         self.slices = json.loads(result[0][2])
         c.close()
         conn.close()
+
+    def relevance(self, index):
+        # BM25 Relevance Scoring
+        # https://en.wikipedia.org/wiki/Okapi_BM25
+        # http://www.cs.otago.ac.nz/homepages/andrew/papers/2014-2.pdf
+        # https://arxiv.org/pdf/0705.1161.pdf
+
+        td = self.total_documents
+        terms = list(index)
+        documents = [list(index[term]) for term in index]
+        documents = set(functools.reduce(operator.iconcat, documents, []))
+        b, k = 0.75, 1.2  # Standard values for free variables
+        for doc in documents:
+            score_doc_query = b
+            for trm in terms:
+                df_t = len(index[trm])  # Document frequency of a term
+                tf = len(index[trm][doc])  # Term frequency in a document (tf)
+
+                # We're using modified IDF.
+                # This minimize negative scoring for terms
+                # occuring in most of the docs. (df_t > td/2)
+                # For example : "The Book in Three Sentences"
+                # Note : Score will be negative if term occurs
+                # in all documents.
+
+                idf = math.log((td - df_t + 0.5) / (df_t + 0.5)) / math.log(0.5 + td)
+                score_doc_term = tf * (idf / (tf + k))
+                score_doc_query += score_doc_term
+            score = (score_doc_query + 0.001) / len(terms)
+            yield (doc, score)
 
     def find_matches(self, ngrams):
 
@@ -66,9 +98,11 @@ class Scout:
         words = list(set(term.tokenize(query)))
         ngrams = term.ngram(words)
 
-        index = dict(self.find_matches(ngrams))
+        query_index = dict(self.find_matches(ngrams))
+        doc_by_rlv = self.relevance(query_index)
+        doc_by_rlv = sorted(doc_relevance, key=lambda idx: idx[1])
 
         # Apply BM25 (F) model to each document
         # Rank and sort the results by relevance score
         # Return a list of book(id, summary) w/ highest relevance
-        return index
+        return doc_by_rlv

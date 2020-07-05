@@ -2,13 +2,9 @@ import json
 import os
 import sqlite3
 from scout import term
-
-
-class TableAlreadyExists(Exception):
-    """Raised when table being created already exists."""
-
-# TODO
-# 1. Create partitions (max 10k records per file?)
+from scout.exceptions import (
+    TableAlreadyExists,
+)
 
 
 class Index:

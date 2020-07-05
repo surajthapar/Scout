@@ -8,3 +8,7 @@ class UnsupportedQueryType(Exception):
 
 class EmptyQuery(Exception):
     """Raised when the search query is empty."""
+
+
+class TableAlreadyExists(Exception):
+    """Raised when table being created already exists."""

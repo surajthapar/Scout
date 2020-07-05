@@ -159,7 +159,7 @@ class Index:
     def index_doc(self, ngrams):
         nparts = term.partitions(ngrams,
                                  path_prefix=self.index_path,
-                                 indexed_at=[1, 2])
+                                 indexed_at=self.slices)
         for word, path in nparts:
             pos = ngrams[word]
             yield (word, path, pos)

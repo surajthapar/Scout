@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 from scout import term
 
@@ -143,6 +144,9 @@ class Index:
             return json.load(f)
 
     def write_partition(self, path, data):
+        # Create directory if it doesn't exist.
+        dir = os.path.dirname(path)
+        os.makedirs(dir, exist_ok=True)
         with open(path, 'w') as f:
             json.dump(data, f)
 
@@ -181,8 +185,42 @@ class Index:
             document = f"{row[1]} - {row[3]} {row[2]}"
             words = term.tokenize(document)
             ngrams = term.ngram(words)
-            for word, path, pos in self.index_doc(ngrams):
-                pass
+
+            # returns [(word, path, pos),]
+            ng_zip = list(self.index_doc(ngrams))
+            files_to_write = set(n[1] for n in ng_zip)
+
+            # Writing to each file just once for
+            # a single document (book).
+            for partition_file in files_to_write:
+                try:
+                    json_index = self.read_partition(partition_file)
+                except FileNotFoundError:
+                    json_index = dict()
+
+                # Collect all words to be written in this file.
+                ngs = [(n[0], n[2]) for n in ng_zip if n[1] == partition_file]
+
+                # Append doc_id, pos to word's list if word
+                # already exists, else add the word to the
+                # json file.
+                for word, pos in ngs:
+                    if json_index.get(word):
+                        json_index[word].append(
+                            dict(
+                                doc_id=row[0],
+                                pos=pos
+                            )
+                        )
+                    else:
+                        json_index[word] = list(
+                            dict(
+                                doc_id=row[0],
+                                pos=pos
+                            )
+                        )
+                self.write_partition(partition_file, json_index)
+
             self.doc_counter += 1
         c.close()
         c = conn.cursor()

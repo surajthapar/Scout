@@ -92,7 +92,8 @@ class Scout:
                 yield (w, d)
 
     def search(self, query, k=None):
-        # results = list()
+        if not k:
+            k = self.max_results
 
         if not isinstance(query, str):
             raise TypeError("query must be of type str.")
@@ -105,9 +106,20 @@ class Scout:
 
         query_index = dict(self.find_matches(ngrams))
         doc_by_rlv = self.relevance(query_index)
-        doc_by_rlv = sorted(doc_by_rlv, key=lambda idx: idx[1])
+        doc_by_rlv = sorted(doc_by_rlv, key=lambda idx: idx[1], reverse=True)
+        doc_by_rlv = doc_by_rlv[:k]  # Get first 'k' results.
+        k = min(len(doc_by_rlv), k)
+        if not k:
+            raise LookupError("No results found.")
+        result_doc_ids = [x[0] for x in doc_by_rlv]
+        conn = sqlite3.connect(self.database)
+        c = conn.cursor()
+        c.execute(
+            f"select id, summary from books where id IN ({','.join(['?']*k)})",
+            result_doc_ids
+        )
+        results = c.fetchall()
+        c.close()
+        conn.close()
 
-        # Apply BM25 (F) model to each document
-        # Rank and sort the results by relevance score
-        # Return a list of book(id, summary) w/ highest relevance
-        return doc_by_rlv
+        return [dict(id=r[0], summary=r[1]) for r in results]

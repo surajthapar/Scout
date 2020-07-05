@@ -22,6 +22,13 @@ class Index:
         self.corpus = corpus_filepath
         self.slices = slices
 
+        if self.table_exists("books") and self.table_exists("meta"):
+            self.read_meta()
+        else:
+            self.define()
+            self.save_corpus()
+            self.read_meta()
+
     def define(self):
         """Define setups the schema for required data tables.
 

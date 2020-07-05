@@ -45,8 +45,11 @@ class Scout:
         for doc in documents:
             score_doc_query = b
             for trm in terms:
-                df_t = len(index[trm])  # Document frequency of a term
-                tf = len(index[trm][doc])  # Term frequency in a document (tf)
+                # Document frequency of a term
+                df_t = len(index.get(trm, []))
+
+                # Term frequency in a document (tf)
+                tf = len(index.get(trm, {}).get(doc, []))
 
                 # We're using modified IDF.
                 # This minimize negative scoring for terms

@@ -179,7 +179,7 @@ class Scout:
 
     def match(self,
               ngrams: Dict[str, List[int]]
-              ) -> Iterator[Tuple[str, Dict[str, List[int]]]:
+              ) -> Iterator[Tuple[str, Dict[str, List[int]]]]:
         """Match function finds all indices of each ngram.
 
         An iterator is returned for (word, data). The data is a dict
@@ -189,7 +189,7 @@ class Scout:
         :type ngrams: Dict[str, List[int]]
         :yield: An index containing (word, data), where data is dict
         of doc and pos list. Passed from dict of match function.
-        :rtype: Iterator[Tuple[str, Dict[str, List[int]]]
+        :rtype: Iterator[Tuple[str, Dict[str, List[int]]]]
         """
 
         def index_of_terms(path: str,
@@ -247,7 +247,7 @@ class Scout:
 
     def search(self,
                query: str,
-               k: int=None
+               k: int = None
                ) -> List[Dict[str, str]]:
         """Search returns a list of matching book summaries in order of relevance.
 

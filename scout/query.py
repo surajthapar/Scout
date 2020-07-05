@@ -4,7 +4,11 @@ import math
 import functools
 import operator
 from scout import term
-from scout.exceptions import IndexMissingInDatabase
+from scout.exceptions import (
+    IndexMissingInDatabase,
+    UnsupportedQueryType,
+    EmptyQuery
+)
 
 
 class Scout:
@@ -110,9 +114,9 @@ class Scout:
             k = self.max_results
 
         if not isinstance(query, str):
-            raise TypeError("query must be of type str.")
+            raise UnsupportedQueryType("query must be of type str.")
         elif not query:
-            raise ValueError("query cannot be empty.")
+            raise EmptyQuery("query cannot be empty.")
 
         # Remove repetitive words in the query
         words = list(set(term.tokenize(query)))

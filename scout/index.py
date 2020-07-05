@@ -213,12 +213,7 @@ class Index:
                             )
                         )
                     else:
-                        json_index[word] = list(
-                            dict(
-                                doc_id=row[0],
-                                pos=pos
-                            )
-                        )
+                        json_index[word] = [{"doc_id": row[0], "pos": pos}]
                 self.write_partition(partition_file, json_index)
 
             self.doc_counter += 1

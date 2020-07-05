@@ -152,16 +152,8 @@ class Index:
         with open(path, 'w') as f:
             json.dump(data, f)
 
-    def index_doc(self, ngrams):
-        nparts = term.partitions(ngrams,
-                                 path_prefix=self.index_path,
-                                 indexed_at=self.slices)
-        for word, path in nparts:
-            pos = ngrams[word]
-            yield (word, path, pos)
-
-    def register_corpus(self):
-        """Register corpus calculates and writes index to json files.
+    def register(self):
+        """Register function calculates and writes corpus index to json files.
 
         Schema of a json file `idx/c/ch.json` :
         ```
@@ -173,6 +165,24 @@ class Index:
             }
         ```
         """
+
+        def index_doc(self,
+                      ngrams: Dict[str, List[int]]
+                      ) -> Iterator[Tuple[str, str, List[int]]]:
+            """Index Document function yields (word, path, pos).
+
+            :param ngrams: Ngram is a dictionary of words, position.
+            :type ngrams: Dict[str, List[int]]
+            :yield: Yields corresponding (word, path, pos)
+            :rtype: Iterator[Tuple[str, str, List[int]]]
+            """
+            nparts = term.partitions(ngrams,
+                                     path_prefix=self.index_path,
+                                     indexed_at=self.slices)
+            for word, path in nparts:
+                pos = ngrams[word]
+                yield (word, path, pos)
+
         conn = sqlite3.connect(self.database)
         c = conn.cursor()
         c.execute('SELECT id, title, summary, author FROM books;')

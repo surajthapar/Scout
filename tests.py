@@ -19,8 +19,8 @@ class ScoutTerm:
     def test_ngram():
         words = ["hello", "britishmen"]
         ngs = ["hel", "hell", "hello", "bri", "brit",
-            "briti", "britis", "british",
-            "britishm", "ritishme", "itishmen"]
+               "briti", "britis", "british",
+               "britishm", "ritishme", "itishmen"]
         assert ngs == list(ngram(words, 3, 8))
 
     def test_ngram_err():
@@ -34,4 +34,5 @@ class ScoutTerm:
 
     def test_partitions():
         ngrams = {"cha": [10, 20], "chan": [20]}
-        assert ("chan", "test/c/ch_index.json") == list(partitions(ngrams,"test",[1,2]))[1]
+        parts = partitions(ngrams, "test", [1, 2])
+        assert ("chan", "test/c/ch_index.json") == list(parts)[1]

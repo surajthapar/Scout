@@ -24,7 +24,7 @@ class Scout:
     >>> from scout import Scout
     >>> q = Scout(database="dbname")
     >>> q.search("The jumping $$ fox changes color.")
-        
+
     The above snippet returns upto 5 results. To control
     the number of results, 'k' int.
 

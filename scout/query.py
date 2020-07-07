@@ -13,81 +13,13 @@ from scout.exceptions import (
 
 
 class Scout:
-    """**Scout** searches through pre-processed index.
+    """Scout Search
 
-    Usage :
-    *******
-    Instantiate Scout class, and simply search. Make sure
-    the index is already processed. For more check,
-    scout.index.Index class.
-
-    >>> from scout import Scout
-    >>> q = Scout(database="dbname")
-    >>> q.search("The jumping $$ fox changes color.")
-
-    The above snippet returns upto 5 results. To control
-    the number of results, 'k' int.
-
-    >>> q.search("The jumping $$ fox changes color.", k=10)
-
-    Adjustable global variables :
-    *****************************
-    `Scout.max_results` is used when user doesn't provide
-    value 'k' during search, (type : `int`), defaults to `5`.
-
-    >>> q = Scout("dbname")
-    >>> Scout.max_results = 10
-    >>> results = q.search("hello world")
-
-    Workflow :
-    **********
-    For a search query, "The Un-Worthy jumping $$ fox changes color."
-
-    >>> "The Un-Worthy jumping $$ fox changes color."
-
-    Hyphenated words are merged.
-
-    >>> "The UnWorthy jumping $$ fox changes color."
-
-    Punctuations and non-ascii (beyond A-Z, 0-9) chars are stripped.
-
-    >>> "The UnWorthy jumping fox changes color"
-
-    Text is lowercased.
-
-    >>> "the unworthy jumping fox changes color"
-
-    Stop words like - "a", "the", "but" are removed.
-
-    >>> "unworthy jumping fox changes color"
-
-    Text is converted into a list of words.
-
-    >>> ["unworthy", "jumping", "fox", "changes", "color"]
-
-    Each word is sliced and repeated to form n-grams.
-    Say, for "unworthy"
-
-    >>> ["unw", "unwo", "unwor", "unwort", "unworth", "unworthy"]
-
-    Each n-gram term is looked in the index. All matching documents are
-    calculated for BM25 relevance score. Top 'k' results with highest
-    scores are returned.
-
-    >>>  [
-        {​'id​':​0​,  'summary​':'Practicing meditation will make you
-                                ​at​ least ​10​ percent happier....'},
-        {'id​':​48, ​'summary​':'Finding something meaningful ​in​ your
-                                life ​is​...'​​},
-        {​​'id​':​7​,  'summary​':'Everything ​in life ​is​ an invention.
-                ​                If​ you...'}
-        ]
-
-    :raises IndexMissingInDatabase: Raised when SQLite3 fails to 
+    :raises IndexMissingInDatabase: Raised when SQLite3 fails to
      find index tables.
     :raises UnsupportedQueryType: Raised when the search query is not a str.
     :raises EmptyQuery: Raised when the search query is empty.
-    :raises LookupError: Raised when no results are found.**. 
+    :raises LookupError: Raised when no results are found.**.
     """
     max_results = 5
     total_documents = None

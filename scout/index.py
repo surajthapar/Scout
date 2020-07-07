@@ -43,10 +43,11 @@ class Index:
             self._meta()
 
     def define(self):
-        """Define setups the schema for required data tables.
+        """Define sets up the schema for required data tables.
 
         :raises TableAlreadyExists: Failed to create table, as
-        it already exists in db.
+                                    it already exists in db.
+
         """
         # Table : Corpus
         conn = sqlite3.connect(self.database)
@@ -107,26 +108,8 @@ class Index:
     def save(self):
         """Save corpus copies book metadata to SQLite3.
 
-        Corpus is a JSON file with book metadata. It follows
-        the below schema :
+        Corpus is a JSON file with book metadata.
 
-        ```{
-            "titles": [
-                "Anything You Want",
-            ],
-            "summaries": [
-                {
-                "id": 0,
-                "summary": "Practicing meditation ... in your life"
-                },
-            ],
-            "authors": [
-                {
-                "book_id": 0,
-                "author": "Dan Harris"
-                },
-            ]
-        }```
         """
         conn = sqlite3.connect(self.database)
         with open(self.corpus) as f:
@@ -202,14 +185,8 @@ class Index:
         """Register function calculates and writes corpus index to json files.
 
         Schema of a json file `idx/c/ch.json` :
-        ```
-            {
-                "change" : {
-                    10 : [20, 45],
-                    20 : [5, 17, 33]
-                }
-            }
-        ```
+        ``{ "change" : { 10 : [20, 45], 20 : [5, 17, 33] } }``
+
         """
 
         def index_doc(self,

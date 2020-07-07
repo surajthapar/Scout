@@ -72,18 +72,13 @@ class Scout:
                   ) -> Iterator[Tuple[int, float]]:
         """Relevance returns matching docs with BM25 score.
 
-        BM25 Relevance Scoring (Refer below docs)
-        ---
-        https://en.wikipedia.org/wiki/Okapi_BM25,
-        http://www.cs.otago.ac.nz/homepages/andrew/papers/2014-2.pdf,
-        https://arxiv.org/pdf/0705.1161.pdf
-
         :param index: The query index contains (word, data),
-        where data is dict of doc and pos list. Passed from
-        dict of match function.
+                      where data is dict of doc and pos list. 
+                      Passed from dict of match function.
         :type index: Dict[str, Dict[str, List[int]]]
         :yield: Yields (Document ID, Relevance Score)
         :rtype: Iterator[Tuple[int, float]]
+
         """
 
         td = self.total_documents
@@ -127,8 +122,9 @@ class Scout:
         :param ngrams: Ngram is a dictionary of words, position.
         :type ngrams: Dict[str, List[int]]
         :yield: An index containing (word, data), where data is dict
-        of doc and pos list. Passed from dict of match function.
+                of doc and pos list. Passed from dict of match function.
         :rtype: Iterator[Tuple[str, Dict[str, List[int]]]]
+
         """
 
         def index_of_terms(path: str,

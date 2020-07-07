@@ -68,3 +68,9 @@ scores are returned.
          ​                If​ you...'}
 ]
 ```
+
+#### BM25 Relevance Scoring (Refer below docs)
+---
+https://en.wikipedia.org/wiki/Okapi_BM25,
+http://www.cs.otago.ac.nz/homepages/andrew/papers/2014-2.pdf,
+https://arxiv.org/pdf/0705.1161.pdf

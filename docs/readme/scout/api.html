@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference &#8212; Scout 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Term Functions" href="term.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-scout.index">
+<span id="scout-index"></span><h2>scout.Index<a class="headerlink" href="#module-scout.index" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="scout.index.Index">
+<em class="property">class </em><code class="sig-prename descclassname">scout.index.</code><code class="sig-name descname">Index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus_filepath</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">database</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">slices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[1, 2, 4]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scout.index.Index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index generator for Scout searches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#scout.exceptions.TableAlreadyExists" title="scout.exceptions.TableAlreadyExists"><strong>TableAlreadyExists</strong></a> – Raised when table being created already exists.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="scout.index.Index.define">
+<code class="sig-name descname">define</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scout.index.Index.define" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define sets up the schema for required data tables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#scout.exceptions.TableAlreadyExists" title="scout.exceptions.TableAlreadyExists"><strong>TableAlreadyExists</strong></a> – Failed to create table, as
+it already exists in db.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.index.Index.read_partition">
+<code class="sig-name descname">read_partition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">[</span>int<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="headerlink" href="#scout.index.Index.read_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper read function for index files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Location of the index files.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Index data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Dict[int, List[str]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.index.Index.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scout.index.Index.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register function calculates and writes corpus index to json files.</p>
+<p>Schema of a json file <cite>idx/c/ch.json</cite> :
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;change&quot;</span> <span class="pre">:</span> <span class="pre">{</span> <span class="pre">10</span> <span class="pre">:</span> <span class="pre">[20,</span> <span class="pre">45],</span> <span class="pre">20</span> <span class="pre">:</span> <span class="pre">[5,</span> <span class="pre">17,</span> <span class="pre">33]</span> <span class="pre">}</span> <span class="pre">}</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.index.Index.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scout.index.Index.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save corpus copies book metadata to SQLite3.</p>
+<p>Corpus is a JSON file with book metadata.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.index.Index.table_exists">
+<code class="sig-name descname">table_exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'books'</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#scout.index.Index.table_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Table exists checks sqlite db for table’s existence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the table, defaults to “books”</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Existence of the table in self.database</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.index.Index.write_partition">
+<code class="sig-name descname">write_partition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">[</span>int<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scout.index.Index.write_partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper write function for index files.</p>
+<p>Missing directories are recursively created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Location of the index file.</p></li>
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>[</em><em>int</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em>) – Index data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scout.query">
+<span id="scout-scout"></span><h2>scout.Scout<a class="headerlink" href="#module-scout.query" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="scout.query.Scout">
+<em class="property">class </em><code class="sig-prename descclassname">scout.query.</code><code class="sig-name descname">Scout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scout.query.Scout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scout Search</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#scout.exceptions.IndexMissingInDatabase" title="scout.exceptions.IndexMissingInDatabase"><strong>IndexMissingInDatabase</strong></a> – Raised when SQLite3 fails to
+find index tables.</p></li>
+<li><p><a class="reference internal" href="#scout.exceptions.UnsupportedQueryType" title="scout.exceptions.UnsupportedQueryType"><strong>UnsupportedQueryType</strong></a> – Raised when the search query is not a str.</p></li>
+<li><p><a class="reference internal" href="#scout.exceptions.EmptyQuery" title="scout.exceptions.EmptyQuery"><strong>EmptyQuery</strong></a> – Raised when the search query is empty.</p></li>
+<li><p><strong>LookupError</strong> – Raised when no results are found.**.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="scout.query.Scout.match">
+<code class="sig-name descname">match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ngrams</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Tuple<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="headerlink" href="#scout.query.Scout.match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match function finds all indices of each ngram.</p>
+<p>An iterator is returned for (word, data). The data is a dict
+combination of document id and term position list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ngrams</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – Ngram is a dictionary of words, position.</p>
+</dd>
+<dt class="field-even">Yield</dt>
+<dd class="field-even"><p>An index containing (word, data), where data is dict
+of doc and pos list. Passed from dict of match function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[Tuple[str, Dict[str, List[int]]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.query.Scout.relevance">
+<code class="sig-name descname">relevance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#scout.query.Scout.relevance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relevance returns matching docs with BM25 score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em><em>]</em>) – The query index contains (word, data),
+where data is dict of doc and pos list. 
+Passed from dict of match function.</p>
+</dd>
+<dt class="field-even">Yield</dt>
+<dd class="field-even"><p>Yields (Document ID, Relevance Score)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[Tuple[int, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scout.query.Scout.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#scout.query.Scout.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search returns a list of matching book summaries in order of relevance.</p>
+<p>Usage :
+Instantiate Scout class, and simply search.
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">q</span> <span class="pre">=</span> <span class="pre">Scout(&quot;dbname&quot;)</span>
+<span class="pre">q.search(&quot;The</span> <span class="pre">jumping</span> <span class="pre">$$</span> <span class="pre">fox</span> <span class="pre">changes</span> <span class="pre">color.&quot;)</span>
+<span class="pre">`</span></code>
+The above snippet returns upto 5 results. To control
+the number of results, ‘k’ int.
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">q.search(&quot;The</span> <span class="pre">jumping</span> <span class="pre">$$</span> <span class="pre">fox</span> <span class="pre">changes</span> <span class="pre">color.&quot;,</span> <span class="pre">k=10)</span>
+<span class="pre">`</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>str</em>) – A search query to find documents.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of results, defaults to self.max_results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#scout.exceptions.UnsupportedQueryType" title="scout.exceptions.UnsupportedQueryType"><strong>UnsupportedQueryType</strong></a> – Raised when the search query is not str.</p></li>
+<li><p><a class="reference internal" href="#scout.exceptions.EmptyQuery" title="scout.exceptions.EmptyQuery"><strong>EmptyQuery</strong></a> – Raised when the search query is empty.</p></li>
+<li><p><strong>LookupError</strong> – Raised when no results are found.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of book {id, summary} in order of relevance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[Dict[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="scout-term">
+<h2>scout.term<a class="headerlink" href="#scout-term" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="scout-term-tokenize">
+<h3>scout.term.tokenize<a class="headerlink" href="#scout-term-tokenize" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="scout.term.tokenize">
+<code class="sig-prename descclassname">term.</code><code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#scout.term.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tokenization is a process of text simplification.</p>
+<p>This function returns a list of important words in a text. The
+input text is converted to all lowercase characters. Special
+characters and punctuations are removed from the text. Finally,
+stop words like ‘a’, ‘the’, ‘for’, ‘from’ etc. are removed.</p>
+<p>&gt; Note : Hyphenated words are converted to single word.
+&gt; For example, ‘un-filtered’ would become ‘unfiltered’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Input text to be tokenized.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Input text variable must be of type ‘str’.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of tokenized words.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="scout-term-ngram">
+<h3>scout.term.ngram<a class="headerlink" href="#scout-term-ngram" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="scout.term.ngram">
+<code class="sig-prename descclassname">term.</code><code class="sig-name descname">ngram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">min_len</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">max_len</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">8</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#scout.term.ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ngram converts a text into a list of smaller text chunks.</p>
+<p>The Ngram dictionary contains positions of a word in
+the paragraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of tokenized text.</p></li>
+<li><p><strong>min_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum length on an Ngram.</p></li>
+<li><p><strong>max_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum length on an Ngram.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Unsupported input text type.</p></li>
+<li><p><strong>IndexError</strong> – List, text is empty.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dict of ngram and position.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict[str, List[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="scout-term-partitions">
+<h3>scout.term.partitions<a class="headerlink" href="#scout-term-partitions" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="scout.term.partitions">
+<code class="sig-prename descclassname">term.</code><code class="sig-name descname">partitions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_prefix</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">indexed_at</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#scout.term.partitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a List[filepath] for term’s clustering.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word</strong> – List of ngrams.</p></li>
+<li><p><strong>path_prefix</strong> (<em>str</em>) – Folder containing the index.</p></li>
+<li><p><strong>indexed_at</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Trim positions for a word.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of relative os paths for the term file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-scout.exceptions">
+<span id="scout-exceptions"></span><h2>scout.exceptions<a class="headerlink" href="#module-scout.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt id="scout.exceptions.EmptyQuery">
+<em class="property">exception </em><code class="sig-prename descclassname">scout.exceptions.</code><code class="sig-name descname">EmptyQuery</code><a class="headerlink" href="#scout.exceptions.EmptyQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when the search query is empty.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="scout.exceptions.IndexMissingInDatabase">
+<em class="property">exception </em><code class="sig-prename descclassname">scout.exceptions.</code><code class="sig-name descname">IndexMissingInDatabase</code><a class="headerlink" href="#scout.exceptions.IndexMissingInDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when SQLite3 fails to find index tables.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="scout.exceptions.TableAlreadyExists">
+<em class="property">exception </em><code class="sig-prename descclassname">scout.exceptions.</code><code class="sig-name descname">TableAlreadyExists</code><a class="headerlink" href="#scout.exceptions.TableAlreadyExists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when table being created already exists.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="scout.exceptions.UnsupportedQueryType">
+<em class="property">exception </em><code class="sig-prename descclassname">scout.exceptions.</code><code class="sig-name descname">UnsupportedQueryType</code><a class="headerlink" href="#scout.exceptions.UnsupportedQueryType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when the search query is not a str.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Scout</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="problem.html">Problem Statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Indexing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="term.html">Term Functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-scout.index">scout.Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-scout.query">scout.Scout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scout-term">scout.term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-scout.exceptions">scout.exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="term.html" title="previous chapter">Term Functions</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Suraj Thapar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/scout/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

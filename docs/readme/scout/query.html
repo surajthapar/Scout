@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searching &#8212; Scout 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Term Functions" href="term.html" />
+    <link rel="prev" title="Indexing" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="searching">
+<h1>Searching<a class="headerlink" href="#searching" title="Permalink to this headline">¶</a></h1>
+<p><strong>Scout</strong> searches through pre-processed index.</p>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Instantiate Scout class, and simply search. Make sure the index is already processed. For more check, scout.index.Index class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scout</span> <span class="kn">import</span> <span class="n">Scout</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">Scout</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s2">&quot;dbname&quot;</span><span class="p">)</span>
+<span class="n">q</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;The jumping $$ fox changes color.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above snippet returns upto 5 results. To control
+the number of results, ‘k’ int.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;The jumping $$ fox changes color.&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="class-variables">
+<h2>Class Variables<a class="headerlink" href="#class-variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="scout-max-results">
+<h3><code class="docutils literal notranslate"><span class="pre">Scout.max_results</span></code><a class="headerlink" href="#scout-max-results" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Scout.max_results</span></code> is used when user doesn’t provide value ‘k’ during search, (type : <code class="docutils literal notranslate"><span class="pre">int</span></code>), defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">Scout</span><span class="p">(</span><span class="s2">&quot;dbname&quot;</span><span class="p">)</span>
+<span class="n">Scout</span><span class="o">.</span><span class="n">max_results</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<p>For a search query, <code class="docutils literal notranslate"><span class="pre">&quot;The</span> <span class="pre">Un-Worthy</span> <span class="pre">jumping</span> <span class="pre">$$</span> <span class="pre">fox</span> <span class="pre">changes</span> <span class="pre">color.&quot;</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Input Query</span>
+<span class="s2">&quot;The Un-Worthy jumping $$ fox changes color.&quot;</span>
+
+<span class="c1"># Hyphenated words are merged.</span>
+<span class="s2">&quot;The UnWorthy jumping $$ fox changes color.&quot;</span>
+
+<span class="c1"># Punctuations and non-ascii (beyond A-Z, 0-9) chars are stripped.</span>
+<span class="s2">&quot;The UnWorthy jumping fox changes color&quot;</span>
+
+<span class="c1"># Text is lowercased.</span>
+<span class="s2">&quot;the unworthy jumping fox changes color&quot;</span>
+
+<span class="c1"># Stop words like - &quot;a&quot;, &quot;the&quot;, &quot;but&quot; are removed.</span>
+<span class="s2">&quot;unworthy jumping fox changes color&quot;</span>
+
+<span class="c1"># Text is converted into a list of words.</span>
+<span class="p">[</span><span class="s2">&quot;unworthy&quot;</span><span class="p">,</span> <span class="s2">&quot;jumping&quot;</span><span class="p">,</span> <span class="s2">&quot;fox&quot;</span><span class="p">,</span> <span class="s2">&quot;changes&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">]</span>
+
+<span class="c1"># Each word is sliced and repeated to form n-grams.</span>
+<span class="c1"># Say, for &quot;unworthy&quot;</span>
+<span class="p">[</span><span class="s2">&quot;unw&quot;</span><span class="p">,</span> <span class="s2">&quot;unwo&quot;</span><span class="p">,</span> <span class="s2">&quot;unwor&quot;</span><span class="p">,</span> <span class="s2">&quot;unwort&quot;</span><span class="p">,</span> <span class="s2">&quot;unworth&quot;</span><span class="p">,</span> <span class="s2">&quot;unworthy&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Each n-gram term is looked in the index. All matching documents are
+calculated for BM25 relevance score. Top ‘k’ results with highest
+scores are returned.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[
+{​&#39;id​&#39;:​0​,  &#39;summary​&#39;:&#39;Practicing meditation will make you
+                        ​at​ least ​10​ percent happier....&#39;},
+{&#39;id​&#39;:​48, ​&#39;summary​&#39;:&#39;Finding something meaningful ​in​ your
+                        life ​is​...&#39;​​},
+{​​&#39;id​&#39;:​7​,  &#39;summary​&#39;:&#39;Everything ​in life ​is​ an invention.
+         ​                If​ you...&#39;}
+]
+</pre></div>
+</div>
+<div class="section" id="bm25-relevance-scoring-refer-below-docs">
+<h3>BM25 Relevance Scoring (Refer below docs)<a class="headerlink" href="#bm25-relevance-scoring-refer-below-docs" title="Permalink to this headline">¶</a></h3>
+<hr class="docutils" />
+<p>https://en.wikipedia.org/wiki/Okapi_BM25,
+http://www.cs.otago.ac.nz/homepages/andrew/papers/2014-2.pdf,
+https://arxiv.org/pdf/0705.1161.pdf</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Scout</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="problem.html">Problem Statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Indexing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Searching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-variables">Class Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="term.html">Term Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Indexing</a></li>
+      <li>Next: <a href="term.html" title="next chapter">Term Functions</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Suraj Thapar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/scout/query.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

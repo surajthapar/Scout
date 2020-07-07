@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indexing &#8212; Scout 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Searching" href="query.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="indexing">
+<h1>Indexing<a class="headerlink" href="#indexing" title="Permalink to this headline">¶</a></h1>
+<p>Index class is used to generate file indices to
+make realtime search faster. Pre-processing of
+the index can be easily achieved.
+Input data format for book metadata is as follows :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;titles&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;Anything You Want&quot;</span><span class="p">,</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;summaries&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;Practicing meditation ... in your life&quot;</span>
+      <span class="p">},</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;authors&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+      <span class="s2">&quot;book_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Dan Harris&quot;</span>
+      <span class="p">},</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scout</span> <span class="kn">import</span> <span class="n">Index</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">Index</span><span class="p">(</span><span class="n">corpus_filepath</span><span class="o">=</span><span class="s2">&quot;data.json&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;sample.db&quot;</span><span class="p">)</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Voila! It’s that simple. You may control file partition
+slicing by using <code class="docutils literal notranslate"><span class="pre">slicing</span></code> variable. It accepts a list of
+int.</p>
+<p>For example, a slicing param of <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">5]</span></code> will save the
+term <em>“changlings”</em> to <code class="docutils literal notranslate"><span class="pre">'idx_sample_db/c/ch/chang_index.json'</span></code>.
+A slicing param of <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2]</span></code> will save the term <em>“changling”</em> to
+<code class="docutils literal notranslate"><span class="pre">'idx_sample_db/c/ch_index.json'</span></code> and so on.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">Index</span><span class="p">(</span><span class="s2">&quot;data.json&quot;</span><span class="p">,</span> <span class="s2">&quot;sample.db&quot;</span><span class="p">,</span> <span class="n">slicing</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">idx</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<p>The raw <code class="docutils literal notranslate"><span class="pre">data.json</span></code> is saved to <strong>SQLite3 database</strong> inside
+<code class="docutils literal notranslate"><span class="pre">'books'</span></code> table. Each row is computed where text from
+<code class="docutils literal notranslate"><span class="pre">(title,</span> <span class="pre">summary,</span> <span class="pre">author)</span></code> is combined together. Text
+processing involves <em>tokenization</em> and generation of
+<em>n-grams</em>. These <em>n-grams</em> are accounted for each document
+and the position of occurrance. These <em>n-grams</em> are then
+carefully saved in a calculated path, also known as a
+<em>partition</em>. Files from this <em>partition</em> are readily
+accessible during realtime search queries.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Scout</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="problem.html">Problem Statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Indexing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="term.html">Term Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="query.html" title="next chapter">Searching</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Suraj Thapar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/scout/index.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

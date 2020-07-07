@@ -4,6 +4,8 @@ Scout : Search Engine
 **Scout** is a search engine built on Python.
 -------------------
 
+`GitHub Page : Scout Documentation <https://surajthapar.github.io/Scout/>`_
+
 **Power of search with Scout**::
 
     >>> from scout import Index, Scout
@@ -45,10 +47,8 @@ Features
 **Scout** uses SQLite3 database to store the corpus.
 
 
-The API Documentation
----------------------
+`The API Documentation <https://surajthapar.github.io/Scout/>`_
+----------------------
 
 If you are looking for information on a specific function, class, or method,
-this part of the documentation is for you.
-
-``/docs/readme/index.rst``
+this part of the `documentation <https://surajthapar.github.io/Scout/>`_ is for you.

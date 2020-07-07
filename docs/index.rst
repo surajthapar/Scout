@@ -59,9 +59,11 @@ this part of the documentation is for you.
    :maxdepth: 2
 
    scout/problem
+   scout/installation
    scout/index
    scout/query
    scout/term
+   scout/api
 
 * :ref:`genindex`
 * :ref:`modindex`

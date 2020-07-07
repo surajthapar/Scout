@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Statement &#8212; Scout 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Scout : Search Engine" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="problem-statement">
+<h1>Problem Statement<a class="headerlink" href="#problem-statement" title="Permalink to this headline">¶</a></h1>
+<p><strong>Search Engine Challenge : Search Utility</strong></p>
+<p>A service that allows students to search through coursebooks summaries which would make picking and buying a coursebook, a much better experience for students.</p>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;titles&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;Anything You Want&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;The Richest Man in Babylon&quot;</span>
+<span class="p">],</span>
+<span class="s2">&quot;queries&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;is your problems&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;achieve take book&quot;</span>
+<span class="p">],</span>
+<span class="s2">&quot;summaries&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;The Book in Three Sentences: Practicing meditation and mindfulness ...&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;The Book in Three Sentences: The 10X Rule says that 1) you should set ...&quot;</span>
+    <span class="p">}</span>
+<span class="p">],</span>
+<span class="s2">&quot;authors&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;book_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Dan Harris&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;book_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Grant Cardone&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="user-inputs">
+<h2>User Inputs<a class="headerlink" href="#user-inputs" title="Permalink to this headline">¶</a></h2>
+<p>Search utility should be developer friendly. Here’s the requirement :</p>
+<div class="section" id="search-query-str">
+<h3>Search Query : <em>str</em><a class="headerlink" href="#search-query-str" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>eg. ‘is your problems’</p>
+</div></blockquote>
+</div>
+<div class="section" id="max-results-to-return-int">
+<h3>Max results to return : <em>int</em><a class="headerlink" href="#max-results-to-return-int" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>eg. 3</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="utility-output">
+<h2>Utility Output<a class="headerlink" href="#utility-output" title="Permalink to this headline">¶</a></h2>
+<p>List of K relevant summaries sorted according to order of
+relevance given a query.</p>
+<div class="section" id="schema">
+<h3>Schema<a class="headerlink" href="#schema" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;summary&#39;</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="nx">integer</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;The Book in Three Sentences: Practicing meditation and </span>
+        <span class="n">mindfulness</span> <span class="n">will</span> <span class="n">make</span> <span class="n">you</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">10</span> <span class="n">percent</span> <span class="n">happier</span><span class="o">....</span><span class="s2">&quot;,</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;The Book in Three Sentences: Finding something important </span>
+        <span class="ow">and</span> <span class="n">meaningful</span> <span class="ow">in</span> <span class="n">your</span> <span class="n">life</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">most</span> <span class="n">productive</span> <span class="n">use</span> <span class="n">of</span><span class="o">...</span><span class="s2">&quot;,</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">48</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;The Book in Three Sentences: Everything in life is an </span>
+        <span class="n">invention</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">choose</span> <span class="n">to</span> <span class="n">look</span> <span class="n">at</span> <span class="n">your</span> <span class="n">life</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">new</span> <span class="n">way</span><span class="o">...</span><span class="s2">&quot;,</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">7</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Scout</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Problem Statement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-inputs">User Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utility-output">Utility Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Indexing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="term.html">Term Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Scout : Search Engine</a></li>
+      <li>Next: <a href="installation.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Suraj Thapar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/scout/problem.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

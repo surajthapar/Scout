@@ -67,20 +67,7 @@ def ngram(text: List[str],
     """Ngram converts a text into a list of smaller text chunks.
 
     The Ngram dictionary contains positions of a word in
-    the paragraph. Below is an example of three words as
-    inferred in the Ngram dict.
-    min_len, max_len = 3, 8
-    words = [.., "change",.., "changes",.., "changing",..]
-    ngram = {
-        "cha" : [7, 20, 34],
-        "chan" : [7, 20, 34],
-        "chang" : [7, 20, 34],
-        "change" : [7, 20],
-        "changes" : [20],
-        "changi" : [34],
-        "changin" : [34],
-        "changing" : [34]
-    }
+    the paragraph.
 
     :param text: List of tokenized text.
     :type text: List[str]
@@ -92,15 +79,15 @@ def ngram(text: List[str],
     :raises IndexError: List, text is empty.
     :return: Dict of ngram and position.
     :rtype: Dict[str, List[int]]
+
     """
 
     if isinstance(text, list):
-        try:
-            if not isinstance(text[0], str):
-                raise TypeError(f"""Param 'text' must be of \
-        type 'list', not {type(text[0]).__name__}""")
-        except IndexError:
-            return {}
+        if not text:
+            raise LookupError
+        if not isinstance(text[0], str):
+            raise TypeError(f"""Param 'text' must be of \
+    type 'list', not {type(text[0]).__name__}""")
     else:
         raise TypeError(f"""Elements of list 'text' must\
     be of type 'str', not {type(text).__name__}""")

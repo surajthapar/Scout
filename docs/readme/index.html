@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout : Search Engine &#8212; Scout 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Problem Statement" href="scout/problem.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="scout-search-engine">
+<h1>Scout : Search Engine<a class="headerlink" href="#scout-search-engine" title="Permalink to this headline">¶</a></h1>
+<p><strong>Scout</strong> is a search engine built on Python.</p>
+<span class="target" id="module-scout"></span><p><strong>Scout</strong> searches through course-book summaries, to provide easier
+experience to pick and choose a book. It performs a search on a
+given query by sifting through book summaries and returns the K most
+relevant documents.</p>
+<hr class="docutils" />
+<p><strong>Power of search with Scout</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scout</span> <span class="kn">import</span> <span class="n">Index</span><span class="p">,</span> <span class="n">Scout</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">Index</span><span class="p">(</span><span class="s2">&quot;data_dump.json&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;scout.db&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">Scout</span><span class="p">(</span><span class="s2">&quot;scout.db&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;autism&quot;</span><span class="p">)</span>
+<span class="go">  [</span>
+<span class="go">     {</span>
+<span class="go">        &#39;id&#39;: 40,</span>
+<span class="go">        &#39;summary&#39;: &#39;...with autistic people.</span>
+<span class="go">                    ...makes living with autism more difficult.&#39;</span>
+<span class="go">     },</span>
+<span class="go">     {</span>
+<span class="go">        &#39;id&#39;: 26,</span>
+<span class="go">        &#39;summary&#39;: &#39;...author, that truth was</span>
+<span class="go">                    committing to the daily practice...&#39;</span>
+<span class="go">     }</span>
+<span class="go">  ]</span>
+</pre></div>
+</div>
+<p><strong>Scout</strong> allows you to pre-process data to form an index. This index
+is accessible easily during realtime searches. Scout uses ngrams to
+increase the chances of matching terms. Relevance is calculated using
+modified version of BM25.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p><strong>Scout</strong> is your go-to <cite>book summary</cite> search engine.</p>
+<ul class="simple">
+<li><p>Granular Indexing with Ngrams</p></li>
+<li><p>Tokenization Filters on Text</p></li>
+<li><p>Faster Retrievals</p></li>
+<li><p>Robust yet Simple APIs</p></li>
+<li><p>Automatic Database Loading</p></li>
+</ul>
+<p><strong>Scout</strong> uses SQLite3 database to store the corpus.</p>
+</div>
+<div class="section" id="the-api-documentation">
+<h2>The API Documentation<a class="headerlink" href="#the-api-documentation" title="Permalink to this headline">¶</a></h2>
+<p>If you are looking for information on a specific function, class, or method,
+this part of the documentation is for you.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scout/problem.html">Problem Statement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scout/problem.html#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/problem.html#user-inputs">User Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/problem.html#utility-output">Utility Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scout/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/index.html">Indexing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scout/index.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/index.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scout/query.html">Searching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scout/query.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/query.html#class-variables">Class Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/query.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scout/term.html">Term Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scout/term.html#tokenizer">Tokenizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/term.html#ngram-generator">Ngram Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/term.html#partition-generator">Partition Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scout/api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scout/api.html#module-scout.index">scout.Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/api.html#module-scout.query">scout.Scout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/api.html#scout-term">scout.term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scout/api.html#module-scout.exceptions">scout.exceptions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Scout</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scout/problem.html">Problem Statement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/index.html">Indexing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/query.html">Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/term.html">Term Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scout/api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="scout/problem.html" title="next chapter">Problem Statement</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Suraj Thapar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

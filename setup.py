@@ -7,7 +7,6 @@ setup(
     description='A basic search engine on Python.',
     author='Suraj Thapar',
     author_email='surajthapar.in@gmail.com',
-    long_description=open('README.md').read(),
     packages=[
         'scout',
     ],

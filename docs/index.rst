@@ -58,6 +58,7 @@ this part of the documentation is for you.
 .. toctree::
    :maxdepth: 2
 
+   scout/problem
    scout/index
    scout/query
    scout/term

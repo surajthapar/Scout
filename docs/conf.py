@@ -33,6 +33,7 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
+    'recommonmark',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,3 +59,9 @@ html_static_path = ['_static']
 
 
 # -- Extension configuration -------------------------------------------------
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}

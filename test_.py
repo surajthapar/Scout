@@ -29,8 +29,8 @@ class TestScoutTerm:
             ngram(text)
 
     def test_empty_ngram(self):
-        words = []
-        assert [] == list(ngram(words))
+        with pytest.raises(LookupError):
+            ngram([], 3, 8)
 
     def test_partitions(self):
         ngrams = {"cha": [10, 20], "chan": [20]}
